@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://DefaultNamespace" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://DefaultNamespace" xmlns:intf="http://DefaultNamespace" xmlns:tns1="http://servlet.javax" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://DefaultNamespace" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://servlet.javax"/>
+   <element name="contextDestroyed">
+    <complexType>
+     <sequence>
+      <element name="arg0" type="xsd:anyType"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="contextDestroyedResponse">
+    <complexType/>
+   </element>
+   <element name="contextInitialized">
+    <complexType>
+     <sequence>
+      <element name="arg0" type="tns1:ServletContextEvent"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="contextInitializedResponse">
+    <complexType/>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="contextInitializedRequest">
+
+      <wsdl:part element="impl:contextInitialized" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="contextDestroyedResponse">
+
+      <wsdl:part element="impl:contextDestroyedResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="contextInitializedResponse">
+
+      <wsdl:part element="impl:contextInitializedResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="contextDestroyedRequest">
+
+      <wsdl:part element="impl:contextDestroyed" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="APListener">
+
+      <wsdl:operation name="contextDestroyed">
+
+         <wsdl:input message="impl:contextDestroyedRequest" name="contextDestroyedRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:contextDestroyedResponse" name="contextDestroyedResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="contextInitialized">
+
+         <wsdl:input message="impl:contextInitializedRequest" name="contextInitializedRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:contextInitializedResponse" name="contextInitializedResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="APListenerSoapBinding" type="impl:APListener">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="contextDestroyed">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="contextDestroyedRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="contextDestroyedResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="contextInitialized">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="contextInitializedRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="contextInitializedResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="APListenerService">
+
+      <wsdl:port binding="impl:APListenerSoapBinding" name="APListener">
+
+         <wsdlsoap:address location="http://localhost:8080/ServerPositionning/services/APListener"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
