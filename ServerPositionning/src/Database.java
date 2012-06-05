@@ -36,33 +36,60 @@ public class Database {
 	}
 	
 	public int insertLocation(double x, double y, int map_id) throws SQLException{
+		Integer loc_id = null;
 		Statement statement = dbcon.createStatement();
-		String query = "INSERT INTO location VALUES (SELECT nextval('seq_location'), "+ x +", "+ y +", "+ map_id +")";
-		ResultSet rs = statement.executeQuery(query);	
+		String queryCheck = "SELECT id FROM location WHERE x='"+ x +"' AND y='"+ y +"' AND map_id="+ map_id;
+		System.out.println(queryCheck);
+		ResultSet rs = statement.executeQuery(queryCheck);	
+		rs.next();
+		loc_id = rs.getInt("id");
+		if(loc_id != null){
+			return loc_id;
+		}
+		
+		String query = "INSERT INTO location (SELECT nextval('seq_location'), '"+ x +"', '"+ y +"', "+ map_id +") RETURNING id";
+		System.out.println(query);
+		rs = statement.executeQuery(query);	
+		rs.next();
+		loc_id = rs.getInt("id");
 		statement.close();  
-		return rs.getInt("id");
+		return loc_id;
 	}
 
 	public void insertRssi(int id_loc, int id_ap, double avg_val, double std_dev) throws SQLException{
 		Statement statement = dbcon.createStatement();
-		String query = "INSERT INTO rssi VALUES (SELECT nextval("+ id_loc +", "+ id_ap +", "+ avg_val +", "+ std_dev +")";
-		ResultSet rs = statement.executeQuery(query);	
+		String query = "INSERT INTO rssi VALUES ("+ id_loc +", "+ id_ap +", '"+ avg_val +"', '"+ std_dev +"')";
+		System.out.println(query);
+		statement.executeUpdate(query);	
 		statement.close(); 
 	}
 	
 	public void insertTempRssi(int id_ap, String client_mac, double avg_val) throws SQLException{
 		Statement statement = dbcon.createStatement();
-		String query = "INSERT INTO tempRssi VALUES ("+ id_ap +", '"+ client_mac +"', '"+ avg_val +"')";
-		ResultSet rs = statement.executeQuery(query);	
+		String query = "INSERT INTO tempRssi VALUES ("+ id_ap +", '"+ client_mac.toUpperCase() +"', '"+ avg_val +"')";
+		System.out.println(query); 
+		statement.executeUpdate(query);	
 		statement.close(); 
 	}	
 	
 	public int getAp_id(String mac_addr) throws SQLException{
 		Statement statement = dbcon.createStatement();
-		String query = "SELECT id from accesspoint WHERE mac_addr = '" + mac_addr + "')";
-		ResultSet rs = statement.executeQuery(query);	
+		String query = "SELECT id from accesspoint WHERE mac_addr = '" + mac_addr.toUpperCase() + "'";
+		System.out.println(query);
+		ResultSet rs = statement.executeQuery(query);
+		rs.next();
+		int idAp = rs.getInt("id");
+		System.out.println(idAp);
 		statement.close(); 
-		return rs.getInt("id");
+		return idAp;
+	}
+	
+	public void purge_tempRssi(String mac_addr) throws SQLException{
+		Statement statement = dbcon.createStatement();
+		String query = "DELETE FROM tempRssi WHERE client mac = '" + mac_addr.toUpperCase() + "'";
+		System.out.println(query); 
+		statement.executeUpdate(query);	
+		statement.close(); 
 	}
 }
 
