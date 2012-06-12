@@ -5,7 +5,7 @@ ALLFLAGS=-Wall -Werror -O2 -I$(PREFIX)/include/ -I$(PREFIX)/../mipsel/usr/includ
 GCCFLAGS=-Wall -Werror -O2 -I$(PREFIX)/include/ -I$(PREFIX)/../mipsel/usr/include/
 LDFLAGS=-L$(PREFIX)/lib/ -L$(PREFIX)/../mipsel/usr/lib/ -lpcap -lm -pthread
 
-pcap: pcap.c
+pcap: pcap.c rssiList.c
 	$(GCC) $(ALLFLAGS) pcap.c rssiList.c -o pcap
 
 %.o : %.c %.h
