@@ -1,4 +1,8 @@
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.concurrent.Semaphore;
@@ -19,7 +23,8 @@ public class MobileCalibrationListener extends HttpServlet {
 	 DatagramSocket serverSocket;
 	 int port_UDP = 1236;
 	 Semaphore sem;
-//	 Database my_database;
+
+	 NetworkTools myNetworkTools;
        
     /**
      * @throws SocketException 
@@ -27,17 +32,10 @@ public class MobileCalibrationListener extends HttpServlet {
      */
     public MobileCalibrationListener() throws SocketException {
         super();
-		
-      /*  try {
-			my_database = new Database();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-*/
        
 		// serverSocket.setBroadcast(true);
 		this.sem = new Semaphore(0, true);
+		myNetworkTools = new NetworkTools();
     }
     
 	/**
@@ -45,11 +43,19 @@ public class MobileCalibrationListener extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		serverSocket = new DatagramSocket(port_UDP);
-		String address = request.getParameter("address");
+		//String address = request.getParameter("address");
 		String x = request.getParameter("x");
 		String y = request.getParameter("y");
 		String map = request.getParameter("map");
 		 
+		String mac_Addr = request.getRemoteAddr(); //==> to obtain the mobile's IP Address
+		//System.out.println("Mobile IP:"+mac_Addr);
+		
+		String address = myNetworkTools.getIpFromMacAddress(mac_Addr);
+		//System.out.println("Mobile IP found:"+ip+" real ip :"+address);
+		
+		
+		
 		MobileCalibration_Process my_UDPHandler = new MobileCalibration_Process(address, x, y, map, serverSocket, port_UDP, sem); 
 		my_UDPHandler.start();
 		try {

@@ -3,6 +3,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.ServletException;
 
@@ -55,6 +57,8 @@ public class Database {
 		statement.close();  
 		return loc_id;
 	}
+	
+	
 
 	public void insertRssi(int id_loc, int id_ap, double avg_val, double std_dev) throws SQLException{
 		Statement statement = dbcon.createStatement();
@@ -90,6 +94,55 @@ public class Database {
 		System.out.println(query); 
 		statement.executeUpdate(query);	
 		statement.close(); 
+	}
+	
+	public ArrayList<TempRssi> select_tempRSSI(String client_mac) throws SQLException{
+		ArrayList<TempRssi> returnList = new ArrayList<TempRssi>();
+		
+		Statement statement = dbcon.createStatement();
+		String query = "SELECT id_ap, avg_val from temprssi WHERE client_mac = '" + client_mac.toUpperCase() + "'";
+		System.out.println(query);
+		ResultSet rs = statement.executeQuery(query);
+		
+		while(rs.next()){
+			TempRssi temp = new TempRssi(rs.getInt("id_ap"), rs.getDouble("avg_val")); 
+			returnList.add(temp);
+		}
+		
+		statement.close(); 
+		return returnList;
+	}
+	
+	public HashMap<Integer,Integer> select_rssi(Integer id_ap, Double avg_val_min, Double avg_val_max) throws SQLException{
+		HashMap<Integer,Integer> returnList = new HashMap<Integer,Integer>();
+		
+		Statement statement = dbcon.createStatement();
+		String query = "SELECT id_loc from rssi WHERE id_ap = '" + id_ap + "' AND avg_val BETWEEN '" + avg_val_min + "' AND '" + avg_val_max + "'";
+		System.out.println(query);
+		ResultSet rs = statement.executeQuery(query);
+		
+		while(rs.next()){
+			if(returnList.containsKey(rs.getInt("id_loc"))){
+				returnList.put(rs.getInt("id_loc"), returnList.get(rs.getInt("id_loc")) + 1);
+			}
+			else{
+				returnList.put(rs.getInt("id_loc"), 1);
+			}
+		}
+		
+		statement.close(); 
+		return returnList;
+	}
+	
+	public Location getLocation(int idLocation) throws SQLException{
+		Statement statement = dbcon.createStatement();
+		String query = "SELECT x, y, map_id from location WHERE id = '" +idLocation + "'";
+		System.out.println(query);
+		ResultSet rs = statement.executeQuery(query);
+		rs.next();
+		Location tempLocation =  new Location(rs.getDouble("x"), rs.getDouble("y"), rs.getInt("map_id"));
+		statement.close(); 
+		return tempLocation;
 	}
 }
 

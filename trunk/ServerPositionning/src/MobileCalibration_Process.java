@@ -35,7 +35,7 @@ public class MobileCalibration_Process extends Thread{
 	
 	public void run(){
 		sendRequestToAP();
-		System.out.println("End MobileCalibration_Process");
+		System.out.println("End MobileCalibration_Process1");
 	}
 	
 	public void sendRequestToAP(){
